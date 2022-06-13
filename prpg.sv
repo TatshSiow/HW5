@@ -1,14 +1,20 @@
- input clk;
-  input clr;
-  output X;
-  reg[2:0] Q;                       
-  assign X=Q[0];                     
-always@(negedge clk or posedge clr)
-  if(clr)begin
-    Q<=3'b1111;                      
-  end
-  else begin
-    Q[1:0]<=Q[2:1];
-    Q[2]<=Q[2]+Q[0];
+module PRPG (
+           input  clk,          // 1-bit clock
+           input  rst,          // 1-bit clear Active-high synchronous
+           output reg[3:1] out  // 3-bit result
+       );
+
+initial
+    out = 3;
+
+always@ (posedge clk) begin
+    if(rst)
+        out <= 4;
+    else begin
+        // out[3] <= out[2];
+        // out[2] <= out[1];
+        // out[1] <= out[1] ^ out[3];
+        out <= {out[2:1], out[3]^out[1]};
+    end
 end
 endmodule
