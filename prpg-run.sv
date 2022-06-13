@@ -1,20 +1,21 @@
- reg clk_tb,clr_tb;
-  wire X_tb;
-  PRPG PRPG_1(.clk(clk_tb),.clr(clr_tb),.X(X_tb));
+module PRPG_tb;
+reg rst;      //reset
+wire [3:1] out; //3-bit output
+
+//----- clock產生器 -----
+reg clk = 1'b0;         //設clock初值為1
+always #5 clk = !clk;   //每隔5個單位時間就變換
+
 initial begin
-  clk_tb=0;
-  clr_tb=1;
+    #0  rst=1'b1;
+    #14 rst=1'b0;
+    #195 $finish;
 end
-always begin
-  #5 clk_tb=~clk_tb;
-end
+
+PRPG PRPG_tb(.clk(clk), .rst(rst), .out(out));
+
 initial begin
-  #5 clr_tb=1;
-  #5 clr_tb=0;
-  #140 $finish;
-end
-initial begin
-  $dumpfile("PRPG.vcd");
-  $dumpvars(0,PRPG_1);
+    $dumpfile("PRPG.vcd");
+    $dumpvars(0, PRPG_tb);
 end
 endmodule
